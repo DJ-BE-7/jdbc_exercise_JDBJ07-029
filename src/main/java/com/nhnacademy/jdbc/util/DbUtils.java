@@ -13,12 +13,10 @@ public class DbUtils {
         Connection connection = null;
         try {
             //todo connection.
-            connection = DriverManager.getConnection("jdbc:mysql://ip:3306/{database}","user_name","password");
+            connection = DriverManager.getConnection("jdbc:mysql://133.186.241.167:3306/nhn_academy_129","rnhn_academy_129","cK7xrbwr!");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
         return connection;
     }
-
 }
