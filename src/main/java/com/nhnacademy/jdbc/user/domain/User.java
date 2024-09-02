@@ -26,6 +26,8 @@ public class User {
         return userPassword;
     }
 
+    public String getKeys() {return "(user_id, user_name, user_password)";}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
