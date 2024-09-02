@@ -63,4 +63,13 @@ public class Student {
     public int hashCode() {
         return Objects.hash(id, name, gender, age);
     }
+
+    public String getKeys() {
+        return "(id, name, gender, age, created_at)";
+    }
+
+    public String getValues() {
+        return "('" + id + "', '" + name + "', '" + gender + "', " + age + ", DEFAULT)";
+    }
+
 }
