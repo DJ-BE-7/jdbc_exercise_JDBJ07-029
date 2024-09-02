@@ -24,11 +24,11 @@ public class Student {
     }
 
     public String getKeys() {
-        return "(id, name, gender, age, createdAt)";
+        return "(id, name, gender, age, created_at)";
     }
 
     public String getValues() {
-        return "(" + id + ", " + name + ", " + gender + ", " + age + ", " + createdAt + ")";
+        return "('" + id + "', '" + name + "', '" + gender + "', " + age + ", DEFAULT)";
     }
 
     public String getId() {

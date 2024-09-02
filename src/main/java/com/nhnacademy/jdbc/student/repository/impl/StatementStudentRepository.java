@@ -23,7 +23,7 @@ public class StatementStudentRepository implements StudentRepository {
             Statement stmt = conn.createStatement();
             result = stmt.executeUpdate(String.format("insert into jdbc_students %s values %s",student.getKeys(),student.getValues()));
             stmt.close();
-            return 0;
+            return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }finally {
@@ -43,7 +43,7 @@ public class StatementStudentRepository implements StudentRepository {
         Student student = null;
         try {
             Statement stmt = conn.createStatement();
-            resultSet = stmt.executeQuery(String.format("select * from jdbc_students where id = %s", id));
+            resultSet = stmt.executeQuery(String.format("select * from jdbc_students where id = \'%s\'", id));
             if (resultSet.next()) {
                 student = new Student(resultSet.getString("id"),
                         resultSet.getString("name"),
@@ -70,8 +70,7 @@ public class StatementStudentRepository implements StudentRepository {
         int result = 0;
         try {
             Statement stmt = conn.createStatement();
-            result = stmt.executeUpdate(String.format("update jdbc_students set name=%s, gender=%s, age=%d" +
-                    "where id = %s", student.getName(), student.getGender(), student.getAge(), student.getId()));
+            result = stmt.executeUpdate(String.format("update jdbc_students set name='%s', gender='%s', age=%d where id = '%s'", student.getName(), student.getGender(), student.getAge(), student.getId()));
             stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -92,7 +91,7 @@ public class StatementStudentRepository implements StudentRepository {
         Student student = null;
         try {
             Statement stmt = conn.createStatement();
-            result = stmt.executeUpdate(String.format("delete from jdbc_students where id = %s", id));
+            result = stmt.executeUpdate(String.format("delete from jdbc_students where id = \'%s\'", id));
             stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
