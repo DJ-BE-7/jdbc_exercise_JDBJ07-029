@@ -5,10 +5,7 @@ import com.nhnacademy.jdbc.student.domain.Student;
 import com.nhnacademy.jdbc.student.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 public class StudentRepositoryImpl implements StudentRepository {
@@ -123,13 +120,46 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public long totalCount(Connection connection) {
         //todo#4 totalCount 구현
-        return 0l;
+        long result = 0l;
+        String sql = "SELECT COUNT(*) FROM jdbc_students";
+        try(PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery()){
+            if(resultSet.next()){
+                result = resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } return result;
     }
 
     @Override
     public Page<Student> findAll(Connection connection, int page, int pageSize) {
         //todo#5 페이징 처리 구현
-        return null;
+        List<Student> students = new LinkedList<>();
+        String sql = "SELECT * FROM jdbc_students LIMIT ?, ?";
+        ResultSet resultSet = null;
+        try(PreparedStatement stmt = connection.prepareStatement(sql)){
+            long start = (page - 1) * pageSize;
+            stmt.setLong(1, start);
+            stmt.setInt(2, pageSize);
+            resultSet = stmt.executeQuery();
+            while(resultSet.next()){
+                students.add(new Student(resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        Student.GENDER.valueOf(resultSet.getString("gender")),
+                        resultSet.getInt("age"),
+                        resultSet.getTimestamp("created_at").toLocalDateTime()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Page<Student> result = new Page<>(students, totalCount(connection));
+        return result;
     }
-
 }
